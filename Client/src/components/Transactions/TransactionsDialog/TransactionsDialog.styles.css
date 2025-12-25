@@ -1,0 +1,47 @@
+.tx-dialog .tx-form {
+  display: grid;
+  gap: 1rem;
+}
+.tx-dialog .tx-form.two-col {
+  grid-template-columns: 1fr 1fr;
+}
+.tx-dialog .tx-form .col { display: flex; flex-direction: column; gap: .35rem; }
+.tx-dialog .tx-form .col-span-2 { grid-column: span 2; }
+.tx-dialog .p-dropdown,
+.tx-dialog .p-inputtext,
+.tx-dialog .p-inputtextarea,
+.tx-dialog .p-calendar,
+.tx-dialog .p-inputnumber {
+  width: 100%;
+}
+.tx-dialog-actions {
+  display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .tx-dialog.p-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0;
+  }
+
+  .tx-dialog .p-dialog-content {
+    padding: 1rem !important;
+  }
+
+  .tx-dialog .p-dialog-header {
+    padding: 1rem !important;
+  }
+
+  .tx-dialog .tx-form.two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .tx-dialog .tx-form .col-span-2 {
+    grid-column: span 1;
+  }
+
+  .tx-dialog-actions {
+    justify-content: space-between;
+  }
+}

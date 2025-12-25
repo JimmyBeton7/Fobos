@@ -1,0 +1,98 @@
+.tx-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 340px; display: inline-block; }
+.tx-amount { font-variant-numeric: tabular-nums; font-weight: 600; }
+.tx-amount.pos { color: var(--green-300, #16a34a); }
+.tx-amount.neg { color: var(--red-500, #dc2626); }
+
+.owncat-cell { display: inline-flex; align-items: center; gap: .5rem; }
+.owncat-dot { width: 14px; height: 14px; border-radius: 999px; border: 1px solid #00000010; }
+.kind-tag { text-transform: capitalize; }
+.tx-actions { display: flex; gap: .25rem; }
+
+.account-name-cell .account-name-chip {
+  display: block;
+  width: 100%;
+  background: var(--acc-bg);
+  color: var(--acc-fg);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  line-height: 1.1;
+  box-sizing: border-box;
+}
+
+.category-name-cell .category-name-chip {
+  display: block;
+  width: 100%;
+  background: var(--cat-bg);
+  color: var(--cat-fg);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  line-height: 1.1;
+  box-sizing: border-box;
+}
+
+/* === Mobile: widok kart === */
+
+.transactions-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.transaction-card {
+  background: var(--surface-card);
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  padding: 0.75rem 0.9rem;
+}
+
+.transaction-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.transaction-card-date {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.transaction-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.transaction-card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.transaction-card-label {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.transaction-card-value {
+  text-align: right;
+}
+
+.transaction-card-note {
+  max-width: 60%;
+  text-align: right;
+  white-space: normal;
+}
+
+.transaction-card-footer {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+

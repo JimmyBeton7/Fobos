@@ -1,0 +1,108 @@
+.charts-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: .1rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .charts-page {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: .1rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin-top: 40px;
+  }
+}
+
+.chart-card {
+  background-color: var(--surface-card, #1e1e1e);
+  color: var(--gray-100);
+  padding: 1rem;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 550px;
+  flex: 1 1 calc(50% - 0.5rem);
+  max-width: calc(50% - 0.5rem);
+}
+
+@media (max-width: 900px) {
+  .chart-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+.chart-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-filters2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.charts-multiselect {
+  flex: 1 1 200px;
+  max-width: 400px;
+}
+
+.charts-calendar {
+  flex: 1 1 200px;
+  max-width: 250px;
+}
+
+.charts-calendar .p-inputtext {
+  width: 100% !important;
+  font-size: 0.9rem !important;
+}
+
+.pie-container {
+  height: 310px;
+  width: 100%;
+  position: relative;
+}
+
+.vertical-container {
+  height: 310px;
+  width: 100%;
+  position: relative;
+}
+
+.vertical-year-container {
+  height: 310px;
+  width: 100%;
+  position: relative;
+}
+
+.year-dropdown {
+  flex: 1 1 200px;
+  max-width: 250px;
+}
+
+.stacked-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.stacked-toggle label {
+  color: #fff;
+  user-select: none;
+}

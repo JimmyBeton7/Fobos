@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS trg_account_balance_changed_on_update;

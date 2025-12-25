@@ -1,0 +1,107 @@
+{
+  "name": "Fobos",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist-electron/main.cjs",
+  "scripts": {
+    "dev:renderer": "vite --config Client/vite.config.ts",
+    "dev:ts": "tsup Electron/main.ts Electron/preload.ts --format=cjs --out-dir dist-electron --external electron --target=node18 --watch --onSuccess \"echo [ts] built\"",
+    "dev:electron": "cross-env VITE_DEV_SERVER_URL=http://localhost:5173 wait-on tcp:5173 dist-electron/main.cjs dist-electron/preload.cjs && electron .",
+    "dev": "concurrently -k -s first \"pnpm:dev:renderer\" \"pnpm:dev:ts\" \"pnpm:dev:electron\"",
+    "build:renderer": "vite build --config Client/vite.config.ts",
+    "build:main": "tsup Electron/main.ts --format=cjs --out-dir dist-electron --external electron --target=node18 --minify",
+    "build": "pnpm build:renderer && pnpm build:main && electron-builder",
+    "clean": "rimraf dist dist-electron release || rm -rf dist dist-electron release",
+    "format": "prettier -w .",
+    "rebuild:native": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "electron-builder install-app-deps",
+    "migrate:supabase": "node --loader ts-node/esm scripts/migrateSqliteToSupabase.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0",
+  "build": {
+    "appId": "com.mdurka.fobos",
+    "productName": "Fobos",
+    "files": [
+      "dist-electron/*",
+      "dist/**",
+      "build/**"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "extraResources": [
+      {
+        "from": "Database/migrations",
+        "to": "migrations"
+      }
+    ],
+    "asar": true,
+    "extraMetadata": {
+      "main": "dist-electron/main.cjs"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    }
+  },
+  "dependencies": {
+    "@capacitor-community/sqlite": "^7.0.2",
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
+    "@google-cloud/local-auth": "^3.0.1",
+    "@supabase/supabase-js": "^2.86.2",
+    "better-sqlite3": "^12.4.1",
+    "chart.js": "^4.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "google-auth-library": "^10.5.0",
+    "googleapis": "^166.0.0",
+    "jszip": "^3.10.1",
+    "primeicons": "^7.0.0",
+    "primereact": "^10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.9.5",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@electron/rebuild": "^4.0.1",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.0",
+    "@types/react": "^18.3.26",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^5.1.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^38.1.0",
+    "electron-builder": "^26.0.12",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.1.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
+    "wait-on": "^9.0.3"
+  }
+}

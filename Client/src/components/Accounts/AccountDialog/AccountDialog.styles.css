@@ -1,0 +1,142 @@
+.account-dialog {
+  width: 500px;
+  max-width: 95vw;
+}
+
+.account-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.account-name-field {
+  width: 100%;
+}
+
+.account-name-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.account-name-field .p-inputtext {
+  width: 100%;
+}
+
+.account-dialog-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.account-balance-field,
+.account-color-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-balance-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.account-balance-field .p-inputnumber,
+.account-balance-field .p-inputnumber .p-inputtext {
+  width: 100%;
+}
+
+.account-color-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.account-dialog__color {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.account-description-field {
+  width: 100%;
+}
+
+.account-description-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.account-description-field .p-inputtextarea {
+  width: 100%;
+}
+
+.account-dialog__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.account-description-field .p-inputtextarea,
+.account-description-field textarea {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+.account-description-field .p-inputwrapper,
+.account-description-field .p-inputtextarea-resizable {
+  width: 100%;
+}
+.account-description-field { width: 100%; max-width: none; }
+.account-dialog-form {
+  align-items: stretch;
+}
+
+.account-description-field {
+  width: 100%;
+  flex: 0 0 100%;
+  align-self: stretch;
+}
+
+.account-dialog .account-description-field textarea.p-inputtextarea {
+  width: 100% !important;
+  display: block;
+  box-sizing: border-box;
+}
+
+.account-dialog .account-description-field .p-inputtextarea,
+.account-dialog .account-description-field .p-inputtextarea-resizable,
+.account-dialog .account-description-field .p-inputwrapper {
+  width: 100% !important;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* --- MOBILE TWEAKS --- */
+@media (max-width: 768px) {
+  .account-dialog.p-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0;
+  }
+
+  .account-dialog .p-dialog-header,
+  .account-dialog .p-dialog-content {
+    padding: 1rem !important;
+  }
+
+  .account-dialog-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .account-balance-field,
+  .account-color-field {
+    width: 100%;
+  }
+
+  .account-dialog__footer {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,129 @@
+.main-container{
+  margin-top: 1px;
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 40px;
+  }
+}
+
+.accounts-header {
+  margin-bottom: 1rem;
+}
+
+.accounts-table .col-balance {
+  width: 140px;
+  white-space: nowrap;
+}
+
+.accounts-table .col-actions {
+  width: 120px;
+}
+
+.accounts-table .col-color {
+  width: 160px;
+}
+
+.account-color-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.account-color-bar {
+  width: 100%;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--surface-border, #ccc);
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+.account-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.accounts-header { margin-bottom: 1rem; }
+
+.accounts-table .col-balance { width: 140px; white-space: nowrap; }
+.accounts-table .col-actions { width: 120px; }
+
+.account-name-cell .account-name-chip {
+  display: block;
+  width: 100%;
+  background: var(--acc-bg);
+  color: var(--acc-fg);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  line-height: 1.1;
+  box-sizing: border-box;
+}
+
+.account-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.accounts-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.account-card {
+  margin-bottom: 0.25rem;
+}
+
+.account-card .p-card-body {
+  padding-top: 0.75rem;
+  background: var(--surface-card);
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+}
+
+.account-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.account-card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.account-card-label {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.account-card-value {
+  text-align: right;
+}
+
+.account-card-balance {
+  font-weight: 700;
+}
+
+.account-card-footer {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.account-name-cell .account-name-chip {
+  display: block;
+  width: 100%;
+  background: var(--acc-bg);
+  color: var(--acc-fg);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  line-height: 1.1;
+  box-sizing: border-box;
+}
+

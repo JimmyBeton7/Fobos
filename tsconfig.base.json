@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "paths": {
+      "@fobos/database/*": ["Database/*"]
+    },
+    "types": ["vite/client", "node"]
+  },
+  "include": ["Client", "Electron", "Database", "Main"]
+}
