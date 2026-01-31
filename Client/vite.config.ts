@@ -12,7 +12,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@fobos/database': path.resolve(__dirname, '../Database')
+      '@fobos/database': path.resolve(__dirname, '../Database'),
+      Client: path.resolve(__dirname, './src'),
+      Electron: path.resolve(__dirname, '../Electron'),
+      DataApi: path.resolve(__dirname, '../DataApi'),
     }
   },
   build: {

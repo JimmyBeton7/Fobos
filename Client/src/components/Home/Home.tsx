@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import JSZip from 'jszip'
 import { Button } from 'primereact/button'
-import { supabaseUrl, supabaseAnonKey } from '../../supabaseClient'
+import { supabaseUrl, supabaseAnonKey } from 'DataApi'
 import './Home.styles.css'
 
 type BackupState = 'idle' | 'running' | 'success' | 'error'

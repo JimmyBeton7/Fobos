@@ -13,8 +13,11 @@
     "types": ["vite/client", "node"],
     "baseUrl": ".",
     "paths": {
-      "@fobos/database/*": ["Database/*"]
+      "@fobos/database/*": ["Database/*"],
+      "Client/*": ["Client/src/*"],
+      "Electron/*": ["Electron/*"],
+      "DataApi/*": ["DataApi/*"]
     }
   },
-  "include": ["Client/**/*", "Electron/**/*", "Database/**/*", "Main/**/*"]
+  "include": ["Client/**/*", "Electron/**/*", "Database/**/*", "Main/**/*", "DataApi/**/*"]
 }

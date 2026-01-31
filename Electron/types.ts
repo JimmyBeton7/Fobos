@@ -29,3 +29,14 @@ export type TransactionRow = {
   created_at: string
   updated_at: string
 }
+
+export type OperationStatus = {
+  id: string
+  ts: number
+  scope: 'accounts' | 'categories' | 'transactions'
+  action: 'list' | 'upsert' | 'delete' | 'reloadAll' | 'custom'
+  state: 'success' | 'error'
+  message: string
+  detail?: unknown
+}
+

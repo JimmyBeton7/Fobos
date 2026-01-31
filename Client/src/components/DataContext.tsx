@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { api } from '../api'
-import type { AccountRow, CategoryRow, TransactionRow } from '../../../Electron/types'
+import { api, setStatusListener } from 'DataApi'
+import type { AccountRow, CategoryRow, TransactionRow, OperationStatus } from '../../../Electron/types'
 
 type DataContextValue = {
   accounts: AccountRow[]
@@ -10,6 +10,16 @@ type DataContextValue = {
   reloadCategories: () => Promise<void>
   reloadTransactions: () => Promise<void>
   reloadAll: () => Promise<void>
+
+  loading: {
+    accounts: boolean,
+    transactions: boolean,
+    categories: boolean,
+    reports: boolean
+  }
+
+  lastStatus: OperationStatus | null
+  clearLastStatus: () => void
 }
 
 const DataContext = createContext<DataContextValue | null>(null)
@@ -19,7 +29,23 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<CategoryRow[]>([])
   const [transactions, setTransactions] = useState<TransactionRow[]>([])
 
+  const [loading, setLoading] = useState({
+    accounts: false,
+    categories: false,
+    transactions: false,
+    reports: false
+  })
+
+  const [lastStatus, setLastStatus] = useState<OperationStatus | null>(null)
+  const clearLastStatus = () => setLastStatus(null)
+
+  useEffect(() => {
+    setStatusListener((s) => setLastStatus(s))
+    return () => setStatusListener(null)
+  }, [])
+
   const reloadAccounts = async () => {
+    setLoading(s => ({ ...s, accounts: true }))
     try {
       const data = await api.accounts.list()
       setAccounts(data)
@@ -29,6 +55,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }
 
   const reloadCategories = async () => {
+    setLoading(s => ({ ...s, categories: true }))
     try {
       const data = await api.categories.list()
       setCategories(data)
@@ -38,11 +65,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }
 
   const reloadTransactions = async () => {
+    setLoading(s => ({ ...s, transactions: true }))
     try {
       const data = await api.transactions.listAll()
       setTransactions(data)
     } catch (err) {
       console.error('Failed to reload transactions', err)
+    } finally {
+      setLoading(s => ({ ...s, transactions: false }))
     }
   }
 
@@ -66,6 +96,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     reloadCategories,
     reloadTransactions,
     reloadAll,
+    loading,
+    lastStatus,
+    clearLastStatus
   }
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>

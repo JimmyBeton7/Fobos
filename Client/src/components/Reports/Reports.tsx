@@ -1,11 +1,33 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PieChartBlock from "./components/PieChartBlock";
 import VerticalChartBlock from "./components/VerticalChartBlock";
 import YearlyVerticalChartBlock from "./components/YearlyVerticalChartBlock";
 import "./Reports.styles.css";
-import { api } from "../../api";
+import { api } from "DataApi";
 import type { AccountRow, CategoryRow, TransactionRow } from '../../../../Electron/types';
-import { ProgressSpinner } from "primereact/progressspinner";
+import { Skeleton } from "primereact/skeleton"
+import { Card } from "primereact/card"
+
+function ReportsSkeleton() {
+  return (
+    <div className="charts-page" style={{ gap: 12 }}>
+      <Card>
+        <Skeleton width="14rem" height="1.25rem" className="mb-3" />
+        <Skeleton width="100%" height="260px" />
+      </Card>
+
+      <Card>
+        <Skeleton width="14rem" height="1.25rem" className="mb-3" />
+        <Skeleton width="100%" height="260px" />
+      </Card>
+
+      <Card>
+        <Skeleton width="14rem" height="1.25rem" className="mb-3" />
+        <Skeleton width="100%" height="260px" />
+      </Card>
+    </div>
+  )
+}
 
 export default function Reports() {
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
@@ -53,7 +75,7 @@ export default function Reports() {
   }, [categories]);
 
   if (loading) {
-    return <div className="charts-page"><div><ProgressSpinner aria-label="Loading" /></div></div>;
+    if (loading) return <ReportsSkeleton />
   }
   if (error) {
     return <div className="charts-page"><div style={{ color: "tomato" }}>{error}</div></div>;

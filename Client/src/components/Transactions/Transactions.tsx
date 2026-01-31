@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
@@ -6,9 +6,18 @@ import { Calendar } from 'primereact/calendar'
 import TransactionsTable from './TransactionsTable/TransactionsTable'
 import TransactionsDialog from './TransactionsDialog/TransactionsDialog'
 import type { TransactionRow } from '../../../../Electron/types'
-import { api } from '../../api'
+import { api } from 'DataApi'
 import { useData } from '../DataContext'
+import { useTransactionsState } from './TransactionsStateContext'
+import ImportFromXlsxDialog from './ImportFromXlsxDialog'
 import './Transaction.styles.css'
+
+function startOfMonth(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0, 0)
+}
+function endOfMonth(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999)
+}
 
 export default function Transactions() {
   const {
@@ -17,15 +26,30 @@ export default function Transactions() {
     transactions,
     reloadTransactions,
     reloadAccounts,
+    loading
   } = useData()
 
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [editRow, setEditRow] = useState<TransactionRow | null>(null)
+  const {
+    dateFrom,
+    setDateFrom,
+    dateTo,
+    setDateTo,
+    initialized,
+    setInitialized,
+  } = useTransactionsState()
 
-  const [dateFrom, setDateFrom] = useState<Date | null>(null)
-  const [dateTo, setDateTo] = useState<Date | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editRow, setEditRow] = useState<TransactionRow | null>(null);
+  const [mode, setMode] = useState<'create' | 'edit' | 'duplicate'>('create');
+  const [importOpen, setImportOpen] = useState(false);
 
-  const [mode, setMode] = useState<'create' | 'edit' | 'duplicate'>('create')
+  useEffect(() => {
+    if (initialized) return
+    const now = new Date()
+    setDateFrom(startOfMonth(now))
+    setDateTo(endOfMonth(now))
+    setInitialized(true)
+  }, [initialized, setDateFrom, setDateTo, setInitialized])
 
   const accountsById = useMemo(
     () => Object.fromEntries(accounts.map(a => [a.id, a])),
@@ -112,7 +136,11 @@ export default function Transactions() {
     })
   }, [transactions, dateFrom, dateTo])
 
-  const clearDates = () => { setDateFrom(null); setDateTo(null) }
+  const clearDates = () => {
+    const now = new Date()
+    setDateFrom(startOfMonth(now))
+    setDateTo(endOfMonth(now))
+  }
 
   return (
     <div className="main-container">
@@ -122,6 +150,7 @@ export default function Transactions() {
         <div className="transactions-header">
           <div className="left">
             <Button icon="pi pi-plus" label="Add transaction" onClick={onCreate} />
+            <Button icon="pi pi-file-arrow-up" label="Add from XLSX" onClick={() => setImportOpen(true)} />
           </div>
 
           <div className="right date-filter">
@@ -140,7 +169,7 @@ export default function Transactions() {
               placeholder="To"
             />
             <Button
-              label="Show all"
+              label="Show current"
               icon="pi pi-filter-slash"
               text
               onClick={clearDates}
@@ -156,6 +185,7 @@ export default function Transactions() {
           onEdit={onEdit}
           onDuplicate={onDuplicate}
           onDelete={onDelete}
+          loading={loading.transactions}
         />
 
         <TransactionsDialog
@@ -168,6 +198,16 @@ export default function Transactions() {
           categories={categories}
         />
       </Card>
+
+      <ImportFromXlsxDialog
+        visible={importOpen}
+        onHide={() => setImportOpen(false)}
+        accounts={accounts}
+        categories={categories}
+        onImported={async () => {
+          await Promise.all([reloadTransactions(), reloadAccounts()])
+        }}
+      />
     </div>
   )
 }

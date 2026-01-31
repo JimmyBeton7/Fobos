@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import type { AccountRow, CategoryRow, TransactionRow } from '../../Electron/types'
+import type { AccountRow, CategoryRow, TransactionRow } from '../Electron/types'
 
 export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!
 export const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!

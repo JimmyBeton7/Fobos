@@ -1,16 +1,17 @@
-import { app, BrowserWindow, shell, Menu } from 'electron'
-import path from 'node:path'
+import { app, BrowserWindow, shell, Menu } from 'electron';
+import { ELECTRON_CONSTANTS } from './electron.constants';
+import path from 'node:path';
 
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
-let mainWindow: BrowserWindow | null = null
-const isDev = !!process.env.VITE_DEV_SERVER_URL
-const isDev2 = !app.isPackaged
+let mainWindow: BrowserWindow | null = null;
+const isDev = !app.isPackaged;
+const devUrl = process.env.VITE_DEV_SERVER_URL ?? ELECTRON_CONSTANTS.DEV_URL;
 
 function getIconPath() {
-  if (process.platform !== 'win32') return undefined
-  if (isDev2) {
-    return path.join(__dirname, '../build/icon.ico')
+  if (process.platform !== 'win32') return undefined;
+  if (isDev) {
+    return path.join(__dirname, ELECTRON_CONSTANTS.DEV_ICON_PATH)
   }
   return path.join(process.resourcesPath, 'build', 'icon.ico')
 }
@@ -18,28 +19,25 @@ function getIconPath() {
 function createWindow() {
   const iconPath = getIconPath()
   mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 800,
-    minWidth: 1400,
-    minHeight: 800,
-    title: 'Fobos',
+    width: ELECTRON_CONSTANTS.WINDOW_WIDTH,
+    height: ELECTRON_CONSTANTS.WINDOW_HEIGHT,
+    minWidth: ELECTRON_CONSTANTS.MIN_WINDOW_WIDTH,
+    minHeight: ELECTRON_CONSTANTS.MIN_WINDOW_HEIGHT,
+    title: ELECTRON_CONSTANTS.APP_TITLE,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.cjs'),
-      contextIsolation: true,
-      sandbox: true
+      preload: path.join(__dirname, ELECTRON_CONSTANTS.PRELOAD_FILE),
+      contextIsolation: ELECTRON_CONSTANTS.CONTEXT_ISOLATION,
+      sandbox: ELECTRON_CONSTANTS.SANDBOX
     },
     icon: iconPath,
-    //autoHideMenuBar: true,
+    //autoHideMenuBar: ELECTRON_CONSTANTS.AUTOHIDE_MENU_BAR,
   })
-
-  const isDev = !app.isPackaged
-  const devUrl = process.env.VITE_DEV_SERVER_URL ?? 'http://localhost:5173'
 
   if (isDev) {
     mainWindow.loadURL(devUrl)
     mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
-    const indexPath = path.resolve(__dirname, '../dist/index.html')
+    const indexPath = path.resolve(__dirname, ELECTRON_CONSTANTS.BUILD_INDEX_PATH)
     mainWindow.loadFile(indexPath)
   }
 

@@ -33,7 +33,8 @@
 
   .transactions-header .left {
     display: flex;
-    justify-content: stretch;
+    /*justify-content: stretch;*/
+    gap: 50px;
   }
 
   .transactions-header .left .p-button {

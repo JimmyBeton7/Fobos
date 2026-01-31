@@ -5,7 +5,9 @@ import Accounts from './components/Accounts/Accounts'
 import Transactions from "./components/Transactions/Transactions";
 import Reports from "./components/Reports/Reports";
 import { DataProvider } from './components/DataContext'
+import  GlobalToast from './components/GlobalToast'
 import { ReportsStateProvider } from './components/Reports/ReportsStateContext'
+import { TransactionsStateProvider } from './components/Transactions/TransactionsStateContext';
 import { Home } from './components/Home/Home'
 
 function Layout() {
@@ -42,7 +44,10 @@ export default function App() {
     <Router>
       <DataProvider>
         <ReportsStateProvider>
-          <Layout />
+          <TransactionsStateProvider>
+            <GlobalToast />
+            <Layout />
+          </TransactionsStateProvider>
         </ReportsStateProvider>
       </DataProvider>
     </Router>

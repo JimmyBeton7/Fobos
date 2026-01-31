@@ -7,6 +7,7 @@ import type { TransactionRow, AccountRow, CategoryRow } from '../../../../../Ele
 import { getContrastColor } from "../../helpers/hexToRgb";
 import { Tooltip } from 'primereact/tooltip'
 import { useIsMobile } from "../../helpers/useIsMobile";
+import { Skeleton } from 'primereact/skeleton'
 
 type Props = {
   rows: TransactionRow[]
@@ -15,6 +16,7 @@ type Props = {
   onEdit: (row: TransactionRow) => void
   onDuplicate: (row: TransactionRow) => void
   onDelete: (row: TransactionRow) => void
+  loading?: boolean
 }
 
 const formatPln = (cents: number) =>
@@ -27,6 +29,7 @@ export default function TransactionsTable({
   onEdit,
   onDuplicate,
   onDelete,
+  loading
 }: Props) {
 
   const isMobile = useIsMobile()
@@ -40,6 +43,20 @@ export default function TransactionsTable({
     }))
   }, [rows, accountsById, categoriesById])
 
+  const skeletonRows = useMemo(() => Array.from({ length: 8 }, (_, i) => ({ id: `sk-${i}` } as any)), [])
+  const sk = (w?: string) => <Skeleton width={w ?? '100%'} height="1.25rem" />
+  const bankSk = () => sk('9rem')
+  const titleSk = () => sk()
+  const amountSk = () => <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{sk('6rem')}</div>
+  const catSk = () => sk('10rem')
+  const dateSk = () => sk('7rem')
+  const actionsSk = () => (
+    <div className="tx-actions">
+      <Skeleton width="2rem" height="2rem" />
+      <Skeleton width="2rem" height="2rem" />
+      <Skeleton width="2rem" height="2rem" />
+    </div>
+  )
 
   const bankBody = (row: TransactionRow) => {
     const acc = accountsById[row.account_id]
@@ -159,28 +176,30 @@ export default function TransactionsTable({
 
   return (
     <>
-      <Tooltip
-        key={rows.length}
-        target=".has-acc-tooltip"
-        position="right"
-        showDelay={400}
-        appendTo={document.body}
-      />
+      {!loading && (
+        <Tooltip
+          key={rows.length}
+          target=".has-acc-tooltip"
+          position="right"
+          showDelay={400}
+          appendTo={document.body}
+        />
+      )}
 
       <DataTable
-        value={tableRows}
+        value={loading ? skeletonRows : tableRows}
         tableStyle={{ minWidth: 900 }}
         stripedRows
         showGridlines
         sortMode="multiple"
         removableSort
       >
-        <Column header="Bank" body={bankBody} sortable sortField="_accountName" />
-        <Column header="Title" body={titleBody} sortable sortField="title" />
-        <Column header="Amount" body={amountBody} sortable sortField="amount_cents" style={{ width: 120, textAlign: 'right' }} />
-        <Column header="Own category" body={ownCatBody} sortable sortField="_categoryName" />
-        <Column header="Date" body={dateBody} style={{ width: 140 }} />
-        <Column header="Actions" body={actionsBody} style={{ width: 120 }} />
+        <Column header="Bank" body={loading ? bankSk : bankBody} sortable={!loading} sortField="_accountName" />
+        <Column header="Title" body={loading ? titleSk : titleBody} sortable={!loading} sortField="title" />
+        <Column header="Amount" body={loading ? amountSk : amountBody} sortable={!loading} sortField="amount_cents" style={{ width: 120, textAlign: 'right' }} />
+        <Column header="Own category" body={loading ? catSk : ownCatBody} sortable={!loading} sortField="_categoryName" />
+        <Column header="Date" body={loading ? dateSk : dateBody} style={{ width: 140 }} />
+        <Column header="Actions" body={loading ? actionsSk : actionsBody} style={{ width: 120 }} />
       </DataTable>
     </>
   )}
