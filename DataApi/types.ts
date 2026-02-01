@@ -32,6 +32,7 @@ export type TransactionsApi = {
     note?: string
   }) => Promise<{ ok: boolean; id: string }>
   delete: (id: string) => Promise<{ ok: boolean }>
+  importBatch: (d: ImportTransactionsBatchInput) => Promise<ImportTransactionsBatchResult>
 }
 
 export type ImportTransactionDraft = {
@@ -44,4 +45,21 @@ export type ImportTransactionDraft = {
   currency: string
   bankCategory?: string | null
   ownCategoryId: string | null
+}
+
+export type ImportTransactionsBatchInput = {
+  accountId: string
+  items: Array<{
+    kind: 'income' | 'expense'
+    ownCategoryId: string
+    amountCents: number
+    date: string
+    title: string
+    note?: string
+  }>
+}
+
+export type ImportTransactionsBatchResult = {
+  ok: boolean
+  count: number
 }

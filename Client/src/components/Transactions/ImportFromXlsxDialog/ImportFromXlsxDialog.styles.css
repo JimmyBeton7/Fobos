@@ -1,0 +1,50 @@
+.import-xlsx-dialog {
+  width: min(1100px, 95vw);
+}
+
+.import-xlsx-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.import-xlsx-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.import-xlsx-filename {
+  opacity: 0.7;
+}
+
+.import-xlsx-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.import-xlsx-body {
+  margin-top: 12px;
+}
+
+.import-xlsx-warning {
+  color: tomato;
+  margin-bottom: 12px;
+}
+
+.import-xlsx-loading {
+  padding: 12px;
+}
+
+.import-xlsx-title-input {
+  width: 100%;
+}
+
+.import-xlsx-category {
+  width: 100%;
+}
+
+.import-xlsx-amount {
+  font-weight: 600;
+}

@@ -1,5 +1,4 @@
-// Client/components/Reports/components/PieChartBlock.tsx
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Chart } from "primereact/chart";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
@@ -19,10 +18,10 @@ type Props = {
 };
 
 export default function PieChartBlock({
-                                        transactions,
-                                        accountsById,
-                                        categoriesById,
-                                      }: Props) {
+  transactions,
+  accountsById,
+  categoriesById,
+}: Props) {
   const accounts = useMemo(
     () => Object.values(accountsById) as AccountRow[],
     [accountsById]
@@ -39,7 +38,6 @@ export default function PieChartBlock({
 
   const { start, end } = getCurrentMonthRange();
 
-  // Ustaw default tylko przy pierwszym razie (w skali całej sesji)
   useEffect(() => {
     if (!pieInitialized && accounts.length) {
       setPieDateRange(pieDateRange ?? [start, end]);
@@ -65,7 +63,7 @@ export default function PieChartBlock({
   const normalizedSelected = useMemo(
     () =>
       accounts.filter((a) =>
-        pieSelectedAccountIds.includes(String((a as any).id ?? a.id))
+        pieSelectedAccountIds.includes(String((a as AccountRow).id ?? a.id))
       ),
     [accounts, pieSelectedAccountIds]
   );
@@ -73,7 +71,7 @@ export default function PieChartBlock({
   const selectedAccountIds = useMemo(
     () =>
       new Set(
-        normalizedSelected.map((a) => String((a as any).id ?? a.id))
+        normalizedSelected.map((a) => String((a as AccountRow).id ?? a.id))
       ),
     [normalizedSelected]
   );
@@ -98,15 +96,13 @@ export default function PieChartBlock({
 
     for (const t of transactions) {
       const accId = String(
-        (t as TransactionRow).account_id ?? (t as any).accountId
+        (t as TransactionRow).account_id
       );
       const catId = String(
-        (t as TransactionRow).own_category_id ?? (t as any).owncategoryId
+        (t as TransactionRow).own_category_id
       );
       const amountCents = Number(
-        (t as any).amountCents ??
-        (t as TransactionRow).amount_cents ??
-        0
+        (t as TransactionRow).amount_cents ?? 0
       );
       const type = (t as TransactionRow).kind;
       const dateVal = new Date(String((t as TransactionRow).date));

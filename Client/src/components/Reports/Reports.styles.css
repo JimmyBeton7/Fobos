@@ -41,37 +41,26 @@
   }
 }
 
-.chart-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
+.chart-filters,
 .chart-filters2 {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: .5rem;
   width: 100%;
-  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
-.charts-multiselect {
-  flex: 1 1 200px;
-  max-width: 400px;
+.charts-multiselect,
+.charts-calendar,
+.year-dropdown {
+  width: 100%;
 }
 
-.charts-calendar {
-  flex: 1 1 200px;
-  max-width: 250px;
-}
-
-.charts-calendar .p-inputtext {
-  width: 100% !important;
-  font-size: 0.9rem !important;
+.charts-multiselect .p-multiselect,
+.charts-calendar .p-calendar,
+.charts-calendar .p-calendar input,
+.year-dropdown .p-dropdown {
+  width: 100%;
 }
 
 .pie-container {
@@ -90,11 +79,6 @@
   height: 310px;
   width: 100%;
   position: relative;
-}
-
-.year-dropdown {
-  flex: 1 1 200px;
-  max-width: 250px;
 }
 
 .stacked-toggle {

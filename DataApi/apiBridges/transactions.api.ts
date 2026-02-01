@@ -1,7 +1,7 @@
-import type { TransactionsApi } from "../types"
+import type { TransactionsApi, ImportTransactionsBatchInput, ImportTransactionsBatchResult } from "../types"
 import { supabase } from "../supaBase.client"
 import type { TransactionRow, AccountRow } from "../../Electron/types"
-import { useEmitStatus } from "../statusListener.ts"
+import { useEmitStatus } from "../statusListener"
 
 export const transactionsApi: TransactionsApi = {
   async listAll() {
@@ -191,6 +191,80 @@ export const transactionsApi: TransactionsApi = {
         if (updAccErr) throw updAccErr
 
         return { ok: true }
+      }
+    )
+  },
+
+  async importBatch(d: ImportTransactionsBatchInput): Promise<ImportTransactionsBatchResult> {
+    return useEmitStatus(
+      {
+        scope: 'transactions',
+        action: 'import',
+        successMessage: `Imported ${d.items.length} transactions`,
+        errorMessage: 'Import failed',
+      },
+      async () => {
+        const now = new Date().toISOString()
+
+        const { data: acc, error: accErr } = await supabase
+          .from('account')
+          .select('*')
+          .eq('id', d.accountId)
+          .maybeSingle()
+
+        if (accErr) throw accErr
+        if (!acc) throw new Error('Account not found')
+
+        const accRow = acc as AccountRow
+
+        let deltaTotal = 0
+        let maxTxDate: string | null = null
+
+        const txRows: TransactionRow[] = d.items.map((it) => {
+          const signed = it.kind === 'income' ? it.amountCents : -it.amountCents
+          deltaTotal += signed
+          if (!maxTxDate || new Date(it.date) > new Date(maxTxDate)) maxTxDate = it.date
+
+          return {
+            id: crypto.randomUUID(),
+            account_id: d.accountId,
+            kind: it.kind,
+            own_category_id: it.ownCategoryId,
+            amount_cents: it.amountCents,
+            date: it.date,
+            title: it.title,
+            note: it.note ?? null,
+            created_at: now,
+            updated_at: now,
+          }
+        })
+
+        const { error: upsertErr } = await supabase
+          .from('transaction')
+          .upsert(txRows, { onConflict: 'id' })
+
+        if (upsertErr) throw upsertErr
+
+        if (deltaTotal !== 0) {
+          const newBalance = accRow.current_amount_cents + deltaTotal
+
+          const prevBCM = accRow.balance_changed_manually
+          const shouldBcmBeMaxTxDate =
+            !!maxTxDate && (!prevBCM || new Date(prevBCM) < new Date(maxTxDate))
+
+          const { error: updAccErr } = await supabase
+            .from('account')
+            .update({
+              current_amount_cents: newBalance,
+              balance_changed_manually: shouldBcmBeMaxTxDate ? maxTxDate : prevBCM,
+              updated_at: now,
+            })
+            .eq('id', d.accountId)
+
+          if (updAccErr) throw updAccErr
+        }
+
+        return { ok: true, count: d.items.length }
       }
     )
   },

@@ -16,6 +16,13 @@
   gap: .5rem;
 }
 
+.transactions-header .left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .transactions-header .right .label {
   opacity: .8;
 }
@@ -32,13 +39,35 @@
   }
 
   .transactions-header .left {
+    position: fixed;
+    right: 16px;
+    bottom: 60px;
+    z-index: 1100;
+
     display: flex;
-    /*justify-content: stretch;*/
-    gap: 50px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 12px;
+    flex-wrap: nowrap;
   }
 
   .transactions-header .left .p-button {
-    width: 100%;
+    width: 70px;
+    height: 70px;
+    padding: 0;
+    border-radius: 60%;
+    justify-content: center;
+  }
+
+  .transactions-header .left .p-button .p-button-label {
+    display: none;
+  }
+
+  .transactions-header .left .p-button .p-button-icon {
+    font-size: 1.35rem;
+    margin: 0;
   }
 
   .transactions-header .right.date-filter {

@@ -1,14 +1,10 @@
-// Client/components/Reports/components/VerticalChartBlock.tsx
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Chart } from "primereact/chart";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
 import { Card } from "primereact/card";
 import { getCurrentMonthRange } from "../helpers/dateHelpers";
-import type {
-  TransactionRow,
-  AccountRow,
-} from "../../../../../Electron/types";
+import type { TransactionRow, AccountRow } from "../../../../../Electron/types";
 import { useReportsState } from "../ReportsStateContext";
 
 type Props = {
@@ -17,9 +13,9 @@ type Props = {
 };
 
 export default function VerticalChartBlock({
-                                             transactions,
-                                             accountsById,
-                                           }: Props) {
+  transactions,
+  accountsById,
+}: Props) {
   const accounts = useMemo(
     () => Object.values(accountsById) as AccountRow[],
     [accountsById]
@@ -61,7 +57,7 @@ export default function VerticalChartBlock({
   const normalizedSelected = useMemo(
     () =>
       accounts.filter((a) =>
-        barSelectedAccountIds.includes(String((a as any).id ?? a.id))
+        barSelectedAccountIds.includes(String((a as AccountRow).id))
       ),
     [accounts, barSelectedAccountIds]
   );
@@ -69,7 +65,7 @@ export default function VerticalChartBlock({
   const selectedAccountIds = useMemo(
     () =>
       new Set(
-        normalizedSelected.map((a) => String((a as any).id ?? a.id))
+        normalizedSelected.map((a) => String((a as AccountRow).id))
       ),
     [normalizedSelected]
   );
@@ -93,7 +89,7 @@ export default function VerticalChartBlock({
 
     for (const t of transactions) {
       const accId = String(
-        (t as TransactionRow).account_id ?? (t as any).accountId
+        (t as TransactionRow).account_id
       );
       if (selectedAccountIds.size && !selectedAccountIds.has(accId)) continue;
 
@@ -186,7 +182,7 @@ export default function VerticalChartBlock({
                 : [];
             setBarSelectedAccountIds(
               arr.map((a: AccountRow) =>
-                String((a as any).id ?? a.id)
+                String((a as AccountRow).id ?? a.id)
               )
             );
           }}

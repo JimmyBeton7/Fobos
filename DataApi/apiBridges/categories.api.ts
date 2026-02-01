@@ -1,7 +1,7 @@
 import type { CategoriesApi } from "../types"
 import { supabase } from "../supaBase.client"
 import type { CategoryRow } from "../../Electron/types"
-import { useEmitStatus } from "../statusListener.ts"
+import { useEmitStatus } from "../statusListener"
 
 export const categoriesApi: CategoriesApi = {
   async list() {

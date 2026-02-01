@@ -1,7 +1,7 @@
 import type { AccountsApi } from "../types.ts"
-import { supabase } from "../supaBase.client.ts"
+import { supabase } from "../supaBase.client"
 import type { AccountRow } from "../../Electron/types"
-import { useEmitStatus } from "../statusListener.ts"
+import { useEmitStatus } from "../statusListener"
 
 export const accountsApi: AccountsApi = {
   async list() {

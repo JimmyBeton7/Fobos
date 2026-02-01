@@ -7,10 +7,11 @@ import { Checkbox } from 'primereact/checkbox'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Skeleton } from 'primereact/skeleton'
-import type { AccountRow, CategoryRow } from '../../../../Electron/types'
+import type { AccountRow, CategoryRow } from '../../../../../Electron/types'
 import type { ImportTransactionDraft } from 'DataApi/types'
 import { parseSantanderXlsx } from 'DataApi/importers/santanderXlsx'
 import { api } from 'DataApi'
+import './ImportFromXlsxDialog.styles.css'
 
 type Props = {
   visible: boolean
@@ -69,21 +70,18 @@ export default function ImportFromXlsxDialog(props: Props) {
       const toImport = rows.filter(r => r.include)
 
       const missingCat = toImport.find(r => !r.ownCategoryId)
-      if (missingCat) {
-        throw new Error('Select category for all included rows.')
-      }
+      if (missingCat) throw new Error('Select category for all included rows.')
 
-      for (const r of toImport) {
-        await api.transactions.upsert({
-          accountId: santanderAccountId,
+      await api.transactions.importBatch({
+        accountId: santanderAccountId,
+        items: toImport.map(r => ({
           kind: r.kind,
           ownCategoryId: r.ownCategoryId!,
           amountCents: r.amountCents,
           date: r.date,
           title: r.title,
-          note: undefined,
-        })
-      }
+        })),
+      })
 
       await onImported()
       setRows([])
@@ -94,55 +92,20 @@ export default function ImportFromXlsxDialog(props: Props) {
     }
   }
 
-  const header = (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
-      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-        <input
-          type="file"
-          accept=".xlsx"
-          onChange={(e) => {
-            const f = e.target.files?.[0]
-            if (f) void onPickFile(f)
-          }}
-        />
-        {fileName ? <span style={{ opacity: 0.7 }}>{fileName}</span> : null}
-      </div>
-
-      <div style={{ display: 'flex', gap: 8 }}>
-        <Button
-          label="Clear"
-          icon="pi pi-trash"
-          text
-          disabled={loading || rows.length === 0}
-          onClick={() => { setRows([]); setFileName(null) }}
-        />
-        <Button
-          label="Import"
-          icon="pi pi-check"
-          disabled={!canImport || loading}
-          onClick={() => void importNow()}
-        />
-      </div>
-    </div>
-  )
-
   const includeBody = (r: ImportTransactionDraft) => (
-    <Checkbox
-      checked={r.include}
-      onChange={(e) => updateRow(r.tempId, { include: !!e.checked })}
-    />
+    <Checkbox checked={r.include} onChange={(e) => updateRow(r.tempId, { include: !!e.checked })} />
   )
 
   const titleBody = (r: ImportTransactionDraft) => (
     <InputText
       value={r.title}
       onChange={(e) => updateRow(r.tempId, { title: e.target.value })}
-      style={{ width: '100%' }}
+      className="import-xlsx-title-input"
     />
   )
 
   const amountBody = (r: ImportTransactionDraft) => (
-    <span style={{ fontWeight: 600 }}>
+    <span className="import-xlsx-amount">
       {r.kind === 'expense' ? '-' : '+'}{formatPln(r.amountCents)}
     </span>
   )
@@ -153,17 +116,8 @@ export default function ImportFromXlsxDialog(props: Props) {
       options={categoryOptions}
       placeholder="Select category"
       onChange={(e) => updateRow(r.tempId, { ownCategoryId: e.value })}
-      style={{ width: '100%' }}
+      className="import-xlsx-category"
     />
-  )
-
-  const loadingTable = (
-    <div style={{ padding: 12 }}>
-      <Skeleton width="100%" height="2rem" className="mb-2" />
-      <Skeleton width="100%" height="2rem" className="mb-2" />
-      <Skeleton width="100%" height="2rem" className="mb-2" />
-      <Skeleton width="100%" height="2rem" />
-    </div>
   )
 
   return (
@@ -171,19 +125,54 @@ export default function ImportFromXlsxDialog(props: Props) {
       header="Import transactions (Santander XLSX)"
       visible={visible}
       onHide={onHide}
-      style={{ width: 'min(1100px, 95vw)' }}
+      className="import-xlsx-dialog"
       modal
     >
-      {header}
+      <div className="import-xlsx-header">
+        <div className="import-xlsx-left">
+          <input
+            type="file"
+            accept=".xlsx"
+            onChange={(e) => {
+              const f = e.target.files?.[0]
+              if (f) void onPickFile(f)
+            }}
+          />
+          {fileName ? <span className="import-xlsx-filename">{fileName}</span> : null}
+        </div>
 
-      <div style={{ marginTop: 12 }}>
+        <div className="import-xlsx-actions">
+          <Button
+            label="Clear"
+            icon="pi pi-trash"
+            text
+            disabled={loading || rows.length === 0}
+            onClick={() => { setRows([]); setFileName(null) }}
+          />
+          <Button
+            label="Import"
+            icon="pi pi-check"
+            disabled={!canImport || loading}
+            onClick={() => void importNow()}
+          />
+        </div>
+      </div>
+
+      <div className="import-xlsx-body">
         {!santanderAccountId && (
-          <div style={{ color: 'tomato', marginBottom: 12 }}>
+          <div className="import-xlsx-warning">
             Santander account not found. Add an account with name containing "Santander".
           </div>
         )}
 
-        {loading && rows.length === 0 ? loadingTable : (
+        {loading && rows.length === 0 ? (
+          <div className="import-xlsx-loading">
+            <Skeleton width="100%" height="2rem" className="mb-2" />
+            <Skeleton width="100%" height="2rem" className="mb-2" />
+            <Skeleton width="100%" height="2rem" className="mb-2" />
+            <Skeleton width="100%" height="2rem" />
+          </div>
+        ) : (
           <DataTable value={rows} stripedRows showGridlines scrollable scrollHeight="55vh">
             <Column header="Use" body={includeBody} style={{ width: 70 }} />
             <Column field="date" header="Date" style={{ width: 130 }} />

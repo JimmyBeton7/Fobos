@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Chart } from "primereact/chart";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";

@@ -33,8 +33,8 @@ export type TransactionRow = {
 export type OperationStatus = {
   id: string
   ts: number
-  scope: 'accounts' | 'categories' | 'transactions'
-  action: 'list' | 'upsert' | 'delete' | 'reloadAll' | 'custom'
+  scope: 'accounts' | 'categories' | 'transactions' | 'config'
+  action: 'list' | 'upsert' | 'delete' | 'reloadAll' | 'custom' | 'import' | 'supabase_config'
   state: 'success' | 'error'
   message: string
   detail?: unknown

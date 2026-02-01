@@ -1,4 +1,4 @@
-import React, { type CSSProperties, useMemo } from 'react'
+import { type CSSProperties, useMemo } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'

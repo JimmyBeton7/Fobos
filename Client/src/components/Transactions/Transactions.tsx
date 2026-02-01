@@ -9,7 +9,8 @@ import type { TransactionRow } from '../../../../Electron/types'
 import { api } from 'DataApi'
 import { useData } from '../DataContext'
 import { useTransactionsState } from './TransactionsStateContext'
-import ImportFromXlsxDialog from './ImportFromXlsxDialog'
+import ImportFromXlsxDialog from './ImportFromXlsxDialog/ImportFromXlsxDialog'
+import { useIsMobile } from "../helpers/useIsMobile";
 import './Transaction.styles.css'
 
 function startOfMonth(d: Date) {
@@ -42,6 +43,8 @@ export default function Transactions() {
   const [editRow, setEditRow] = useState<TransactionRow | null>(null);
   const [mode, setMode] = useState<'create' | 'edit' | 'duplicate'>('create');
   const [importOpen, setImportOpen] = useState(false);
+
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (initialized) return
@@ -149,8 +152,20 @@ export default function Transactions() {
 
         <div className="transactions-header">
           <div className="left">
-            <Button icon="pi pi-plus" label="Add transaction" onClick={onCreate} />
-            <Button icon="pi pi-file-arrow-up" label="Add from XLSX" onClick={() => setImportOpen(true)} />
+            <Button 
+              icon="pi pi-plus" 
+              label="Add transaction" 
+              aria-label="Add transaction"
+              onClick={onCreate} 
+            />
+            {!isMobile && (
+              <Button 
+                icon="pi pi-file-arrow-up" 
+                label="Add from XLSX" 
+                aria-label="Add from XLSX"
+                onClick={() => setImportOpen(true)} 
+              />
+            )}
           </div>
 
           <div className="right date-filter">

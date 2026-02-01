@@ -1,11 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
 import type { AccountRow, CategoryRow, TransactionRow } from '../Electron/types'
+import { emitStatus } from './statusListener'
 
 export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!
 export const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('[Supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY')
+  const errMessage = 'Supabase URL or Anon key nnot found'
+  emitStatus({
+    scope: "config",
+    action: "supabase_config",
+    state: "error",
+    message: errMessage,
+  });
 }
 
 export type SupabaseAccountRow = AccountRow

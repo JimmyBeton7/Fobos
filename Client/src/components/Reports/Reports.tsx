@@ -1,66 +1,80 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import PieChartBlock from "./components/PieChartBlock";
 import VerticalChartBlock from "./components/VerticalChartBlock";
 import YearlyVerticalChartBlock from "./components/YearlyVerticalChartBlock";
 import "./Reports.styles.css";
-import { api } from "DataApi";
-import type { AccountRow, CategoryRow, TransactionRow } from '../../../../Electron/types';
+import type { AccountRow, CategoryRow } from '../../../../Electron/types';
 import { Skeleton } from "primereact/skeleton"
 import { Card } from "primereact/card"
+import { useData } from "../DataContext";
 
 function ReportsSkeleton() {
   return (
-    <div className="charts-page" style={{ gap: 12 }}>
-      <Card>
+    <div className="charts-page">
+      {/* Pie */}
+      <Card className="chart-card">
         <Skeleton width="14rem" height="1.25rem" className="mb-3" />
-        <Skeleton width="100%" height="260px" />
+
+        <div className="chart-filters">
+          <div className="charts-multiselect">
+            <Skeleton width="100%" height="2.5rem" />
+          </div>
+          <div className="charts-calendar">
+            <Skeleton width="100%" height="2.5rem" />
+          </div>
+        </div>
+
+        <div className="pie-container">
+          <Skeleton width="100%" height="310px" />
+        </div>
       </Card>
 
-      <Card>
+      {/* Bar */}
+      <Card className="chart-card">
         <Skeleton width="14rem" height="1.25rem" className="mb-3" />
-        <Skeleton width="100%" height="260px" />
+
+        <div className="chart-filters2">
+          <div className="charts-multiselect">
+            <Skeleton width="100%" height="2.5rem" />
+          </div>
+          <div className="charts-calendar">
+            <Skeleton width="100%" height="2.5rem" />
+          </div>
+        </div>
+
+        <div className="vertical-container">
+          <Skeleton width="100%" height="310px" />
+        </div>
       </Card>
 
-      <Card>
-        <Skeleton width="14rem" height="1.25rem" className="mb-3" />
-        <Skeleton width="100%" height="260px" />
+      {/* Yearly */}
+      <Card className="chart-card">
+        <Skeleton width="18rem" height="1.25rem" className="mb-3" />
+
+        <div className="chart-filters">
+          <div className="year-dropdown">
+            <Skeleton width="100%" height="2.5rem" />
+          </div>
+          <div className="stacked-toggle">
+            <Skeleton width="1.25rem" height="1.25rem" />
+            <Skeleton width="6rem" height="1rem" />
+          </div>
+        </div>
+
+        <div className="vertical-year-container">
+          <Skeleton width="100%" height="310px" />
+        </div>
       </Card>
     </div>
-  )
+  );
 }
 
 export default function Reports() {
-  const [accounts, setAccounts] = useState<AccountRow[]>([]);
-  const [categories, setCategories] = useState<CategoryRow[]>([]);
-  const [transactions, setTransactions] = useState<TransactionRow[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  const { accounts, categories, transactions, loading } = useData();
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        setLoading(true);
-        const [acc, cat, trx] = await Promise.all([
-          api.accounts.list(),
-          api.categories.list(),
-          api.transactions.listAll(),
-        ]);
-        if (!mounted) return;
-        setAccounts(acc);
-        setCategories(cat);
-        setTransactions(trx);
-      } catch (e: any) {
-        if (!mounted) return;
-        setError(e?.message ?? "Failed to load reports data");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const isLoading = !!loading?.accounts || !!loading?.categories || !!loading?.transactions;
 
   const accountsById = useMemo(() => {
     const m: Record<string, AccountRow> = {};
@@ -74,9 +88,8 @@ export default function Reports() {
     return m;
   }, [categories]);
 
-  if (loading) {
-    if (loading) return <ReportsSkeleton />
-  }
+  if (isLoading) return <ReportsSkeleton />;
+
   if (error) {
     return <div className="charts-page"><div style={{ color: "tomato" }}>{error}</div></div>;
   }

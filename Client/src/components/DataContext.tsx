@@ -51,6 +51,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setAccounts(data)
     } catch (err) {
       console.error('Failed to reload accounts', err)
+    } finally {
+      setLoading(s => ({ ...s, accounts: false }))
     }
   }
 
@@ -61,6 +63,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setCategories(data)
     } catch (err) {
       console.error('Failed to reload categories', err)
+    } finally {
+      setLoading(s => ({ ...s, categories: false }))
     }
   }
 
